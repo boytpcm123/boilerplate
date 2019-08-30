@@ -17,30 +17,33 @@ public struct SwiftIcon {
 }
 
 public enum Fonts: String {
-    case FontAwesome = "FontAwesome"
-    case Iconic = "open-iconic"
-    case Ionicon = "Ionicons"
-    case Octicon = "octicons"
-    case Themify = "themify"
-    case MapIcon = "map-icons"
-    case MaterialIcon = "MaterialIcons-Regular"
+    case fontAwesome = "FontAwesome"
+    case iconic = "open-iconic"
+    case ionicon = "Ionicons"
+    case octicon = "octicons"
+    case themify = "themify"
+    case mapIcon = "map-icons"
+    case materialIcon = "MaterialIcons-Regular"
+    case segoeMDL2 = "Segoe mdl2 assets"
     
     var fontName: String {
         switch self {
-        case .FontAwesome:
+        case .fontAwesome:
             return "FontAwesome"
-        case .Iconic:
+        case .iconic:
             return "Icons"
-        case .Ionicon:
+        case .ionicon:
             return "Ionicons"
-        case .Octicon:
+        case .octicon:
             return "octicons"
-        case .Themify:
+        case .themify:
             return "Themify"
-        case .MapIcon:
+        case .mapIcon:
             return "map-icons"
-        case .MaterialIcon:
+        case .materialIcon:
             return "Material Icons"
+        case .segoeMDL2:
+            return "Segoe MDL2 Assets"
         }
     }
     
@@ -73,42 +76,44 @@ func getAttributedString(_ text: NSString, ofSize size: CGFloat) -> NSMutableAtt
             fontCode = (fontCode as NSString).replacingOccurrences(of: "_", with: "-")
         }
         
-        var fontType: Fonts = Fonts.FontAwesome
+        var fontType: Fonts = Fonts.fontAwesome
         var fontArr: [String: String] = ["": ""]
         
         if fontPrefix == "fa" {
-            fontType = Fonts.FontAwesome
+            fontType = Fonts.fontAwesome
             fontArr = fontAwesomeIconArr
         } else if fontPrefix == "ic" {
-            fontType = Fonts.Iconic
+            fontType = Fonts.iconic
             fontArr = iconicIconArr
         } else if fontPrefix == "io" {
-            fontType = Fonts.Ionicon
+            fontType = Fonts.ionicon
             fontArr = ioniconArr
         } else if fontPrefix == "oc" {
-            fontType = Fonts.Octicon
+            fontType = Fonts.octicon
             fontArr = octiconArr
         } else if fontPrefix == "ti" {
-            fontType = Fonts.Themify
+            fontType = Fonts.themify
             fontArr = temifyIconArr
         } else if fontPrefix == "mi" {
-            fontType = Fonts.MapIcon
+            fontType = Fonts.mapIcon
             fontArr = mapIconArr
         } else if fontPrefix == "ma" {
-            fontType = Fonts.MaterialIcon
+            fontType = Fonts.materialIcon
             fontArr = materialIconArr
+        } else if fontPrefix == "sm" {
+            fontType = Fonts.segoeMDL2
+            fontArr = segoeMDL2
         }
         
         if let _ = fontArr[fontCode] {
             attributedString.replaceCharacters(in: substringRange, with: String.getIcon(from: fontType, code: fontCode)!)
             let newRange = NSRange(location: substringRange.location, length: 1)
-            attributedString.addAttribute(NSAttributedStringKey.font, value: UIFont.icon(from: fontType, ofSize: size), range: newRange)
+            attributedString.addAttribute(.font, value: UIFont.icon(from: fontType, ofSize: size), range: newRange)
         }
     }
     
     return attributedString
 }
-
 
 func getAttributedStringForRuntimeReplace(_ text: NSString, ofSize size: CGFloat) -> NSMutableAttributedString {
     let attributedString = NSMutableAttributedString(string: text as String)
@@ -135,37 +140,40 @@ func getAttributedStringForRuntimeReplace(_ text: NSString, ofSize size: CGFloat
             
             if fontPrefix.utf16.count > 0 && fontCode.utf16.count > 0 {
                 
-                var fontType: Fonts = Fonts.FontAwesome
+                var fontType: Fonts = Fonts.fontAwesome
                 var fontArr: [String: String] = ["": ""]
                 
                 if fontPrefix == "fa" {
-                    fontType = Fonts.FontAwesome
+                    fontType = Fonts.fontAwesome
                     fontArr = fontAwesomeIconArr
                 } else if fontPrefix == "ic" {
-                    fontType = Fonts.Iconic
+                    fontType = Fonts.iconic
                     fontArr = iconicIconArr
                 } else if fontPrefix == "io" {
-                    fontType = Fonts.Ionicon
+                    fontType = Fonts.ionicon
                     fontArr = ioniconArr
                 } else if fontPrefix == "oc" {
-                    fontType = Fonts.Octicon
+                    fontType = Fonts.octicon
                     fontArr = octiconArr
                 } else if fontPrefix == "ti" {
-                    fontType = Fonts.Themify
+                    fontType = Fonts.themify
                     fontArr = temifyIconArr
                 } else if fontPrefix == "mi" {
-                    fontType = Fonts.MapIcon
+                    fontType = Fonts.mapIcon
                     fontArr = mapIconArr
                 } else if fontPrefix == "ma" {
-                    fontType = Fonts.MaterialIcon
+                    fontType = Fonts.materialIcon
                     fontArr = materialIconArr
+                } else if fontPrefix == "sm" {
+                    fontType = Fonts.segoeMDL2
+                    fontArr = segoeMDL2
                 }
                 
                 
                 if let _ = fontArr[fontCode] {
                     attributedString.replaceCharacters(in: match.range, with: String.getIcon(from: fontType, code: fontCode)!)
                     let newRange = NSRange(location: match.range.location, length: 1)
-                    attributedString.addAttribute(NSAttributedStringKey.font, value: UIFont.icon(from: fontType, ofSize: size), range: newRange)
+                    attributedString.addAttribute(.font, value: UIFont.icon(from: fontType, ofSize: size), range: newRange)
                 }
                 
             }
@@ -178,7 +186,7 @@ func getAttributedStringForRuntimeReplace(_ text: NSString, ofSize size: CGFloat
     return attributedString
 }
 
-func GetIconIndexWithSelectedIcon(_ icon: String) -> String {
+public func GetIconIndexWithSelectedIcon(_ icon: String) -> String {
     let text = icon as NSString
     var iconIndex: String = ""
  
@@ -192,7 +200,7 @@ func GetIconIndexWithSelectedIcon(_ icon: String) -> String {
         var fontCode: String = splitArr[1]
         
         if fontCode.lowercased().range(of: "_") != nil {
-            fontCode = (fontCode as NSString!).replacingOccurrences(of: "_", with: "-")
+            fontCode = fontCode.replacingOccurrences(of: "_", with: "-")
         }
         iconIndex = fontCode
     }
@@ -200,9 +208,9 @@ func GetIconIndexWithSelectedIcon(_ icon: String) -> String {
     return iconIndex
 }
 
-func GetFontTypeWithSelectedIcon(_ icon: String) -> Fonts {
+public func GetFontTypeWithSelectedIcon(_ icon: String) -> Fonts {
     let text = icon as NSString
-    var fontType: Fonts = Fonts.FontAwesome
+    var fontType: Fonts = Fonts.fontAwesome
     
     for substring in ((text as String).split{$0 == " "}.map(String.init)) {
         var splitArr = ["", ""]
@@ -221,19 +229,21 @@ func GetFontTypeWithSelectedIcon(_ icon: String) -> Fonts {
         
         
         if fontPrefix == "fa" {
-            fontType = Fonts.FontAwesome
+            fontType = Fonts.fontAwesome
         } else if fontPrefix == "ic" {
-            fontType = Fonts.Iconic
+            fontType = Fonts.iconic
         } else if fontPrefix == "io" {
-            fontType = Fonts.Ionicon
+            fontType = Fonts.ionicon
         } else if fontPrefix == "oc" {
-            fontType = Fonts.Octicon
+            fontType = Fonts.octicon
         } else if fontPrefix == "ti" {
-            fontType = Fonts.Themify
+            fontType = Fonts.themify
         } else if fontPrefix == "mi" {
-            fontType = Fonts.MapIcon
+            fontType = Fonts.mapIcon
         } else if fontPrefix == "ma" {
-            fontType = Fonts.MaterialIcon
+            fontType = Fonts.materialIcon
+        } else if fontPrefix == "sm" {
+            fontType = Fonts.segoeMDL2
         }
     }
     
